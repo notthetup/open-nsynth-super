@@ -68,7 +68,7 @@ install_deps() {
         libcairo-dev gstreamer0.10-dev gstreamer0.10-x \
         gstreamer0.10-plugins-base-apps gstreamer0.10-alsa \
         libudev-dev libsndfile-dev libopenal-dev libssl-dev \
-        gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
+        gstreamer0.10-plugins-good gstreamer0.10-plugins-ugly \
         gstreamer-plugins-base0.10-dev freeglut3-dev libasound2-dev \
         libxmu-dev libxxf86vm-dev libgl1-mesa-dev libglu1-mesa-dev \
         libraw1394-dev libudev-dev libdrm-dev libglew-dev libopenal-dev \
