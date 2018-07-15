@@ -56,3 +56,6 @@ install-server: ../bin/main.bin
 
 ../bin/%.o: $(STM32CUBE)/Drivers/STM32F0xx_HAL_Driver/Src/%.c
 	arm-none-eabi-gcc -Wall -g -Os -c -o $@ $< -std=c11 $(CFLAGS)
+
+clean:
+	rm -f ../bin/main.elf ../bin/*.o
