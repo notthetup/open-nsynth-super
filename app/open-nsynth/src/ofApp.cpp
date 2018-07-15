@@ -465,9 +465,9 @@ void ofApp::audioOut(ofSoundBuffer& buffer){
 
 void ofApp::newMidiMessage(ofxMidiMessage& msg) {
 	ofxMidiMessage midiMessage = msg;
-	// ofLog(OF_LOG_NOTICE,"channel: " + ofToString(midiMessage.channel) + " control: "
-	// + ofToString(midiMessage.control) +" value: " + ofToString(midiMessage.value)+" pitch: " + ofToString(midiMessage.pitch)
-	// +" velocity: " + ofToString(midiMessage.velocity));
+	ofLog(OF_LOG_NOTICE,"channel: " + ofToString(midiMessage.channel) + " control: "
+	+ ofToString(midiMessage.control) +" value: " + ofToString(midiMessage.value)+" pitch: " + ofToString(midiMessage.pitch)
+	+" velocity: " + ofToString(midiMessage.velocity));
 	int idx;
 	idx = midiMessage.pitch;
 	if (msg.velocity == 127){
