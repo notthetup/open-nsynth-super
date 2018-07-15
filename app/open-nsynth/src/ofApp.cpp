@@ -71,6 +71,25 @@ void ofApp::setup(){
 		midiThread.startThread();
 	}
 
+	// print input ports to console
+	midiIn.listPorts(); // via instance -> comment this line when done
+	//ofxMidiIn::listPorts(); // via static as well
+
+	// open port by number (you may need to change this)
+	midiIn.openPort(1);
+	//midiIn.openPort("IAC Pure Data In");	// by name
+	//midiIn.openVirtualPort("ofxMidiIn Input"); // open a virtual port
+
+	// don't ignore sysex, timing, & active sense messages,
+	// these are ignored by default
+	midiIn.ignoreTypes(false, false, false);
+
+	// add ofApp as a listener
+	midiIn.addListener(this);
+
+	// print received messages to the console
+	midiIn.setVerbose(true);
+
 	oscIn.setup(getDefault(settings["osc"]["in"]["port"], 8000));
 
 	fbo.allocate(BaseScreen::SCREEN_WIDTH, BaseScreen::SCREEN_HEIGHT, GL_RGBA);
@@ -441,5 +460,24 @@ void ofApp::audioOut(ofSoundBuffer& buffer){
 		if(isnan(monoBuffer[i])){
 			printf("ERROR: sGOT A NaN!!!\n");
 		}
+	}
+}
+
+void ofApp::newMidiMessage(ofxMidiMessage& msg) {
+	ofxMidiMessage midiMessage = msg;
+	// ofLog(OF_LOG_NOTICE,"channel: " + ofToString(midiMessage.channel) + " control: "
+	// + ofToString(midiMessage.control) +" value: " + ofToString(midiMessage.value)+" pitch: " + ofToString(midiMessage.pitch)
+	// +" velocity: " + ofToString(midiMessage.velocity));
+	int idx;
+	idx = midiMessage.pitch;
+	if (msg.velocity == 127){
+		synthMutex.lock();
+		synth.on(idx);
+		synthMutex.unlock();
+	}
+	else{
+		synthMutex.lock();
+		synth.off(idx);
+		synthMutex.unlock();
 	}
 }
