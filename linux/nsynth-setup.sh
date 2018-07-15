@@ -65,10 +65,10 @@ install_deps() {
     apt-get update
     apt-get install -y i2c-tools python-smbus gdb-arm-none-eabi gcc-arm-none-eabi \
         git autoconf libtool make pkg-config build-essential \
-        libcairo-dev gstreamer0.10-dev gstreamer0.10-x \
-        gstreamer0.10-plugins-base-apps gstreamer0.10-alsa \
+        libcairo-dev gstreamer1.0-dev gstreamer1.0-x \
+        gstreamer1.0-plugins-base-apps gstreamer1.0-alsa \
         libudev-dev libsndfile-dev libopenal-dev libssl-dev \
-        gstreamer0.10-plugins-good gstreamer0.10-plugins-ugly \
+        gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly \
         gstreamer-plugins-base0.10-dev freeglut3-dev libasound2-dev \
         libxmu-dev libxxf86vm-dev libgl1-mesa-dev libglu1-mesa-dev \
         libraw1394-dev libudev-dev libdrm-dev libglew-dev libopenal-dev \
@@ -99,21 +99,6 @@ Restart=on-abort
 WantedBy=multi-user.target
 EOF
         systemctl enable open-nsynth
-    fi
-}
-
-
-setup_openframeworks() {
-    if ! [ -e /home/pi/opt/of ]
-    then
-        echo "Fetching openFrameworks"
-        mkdir -p /home/pi/opt
-        (
-            cd /home/pi/opt
-            curl -Lk http://openframeworks.cc/versions/v0.9.8/of_v0.9.8_linuxarmv6l_release.tar.gz | tar -xzf -
-            mv of_v0.9.8_linuxarmv6l_release of
-            #sudo of/scripts/linux/debian/install_dependencies.sh
-        )
     fi
 }
 
