@@ -465,19 +465,17 @@ void ofApp::audioOut(ofSoundBuffer& buffer){
 
 void ofApp::newMidiMessage(ofxMidiMessage& msg) {
 	ofxMidiMessage midiMessage = msg;
-	ofLog(OF_LOG_NOTICE,"channel: " + ofToString(midiMessage.channel) + " control: "
-	+ ofToString(midiMessage.control) +" value: " + ofToString(midiMessage.value)+" pitch: " + ofToString(midiMessage.pitch)
-	+" velocity: " + ofToString(midiMessage.velocity));
-	int idx;
-	idx = midiMessage.pitch;
-	if (msg.velocity == 127){
+	// ofLog(OF_LOG_NOTICE,"channel: " + ofToString(midiMessage.channel) + " control: "
+	// + ofToString(midiMessage.control) +" value: " + ofToString(midiMessage.value)+" pitch: " + ofToString(midiMessage.pitch)
+	// +" velocity: " + ofToString(midiMessage.velocity));
+	if (msg.status == MIDI_NOTE_ON){
 		synthMutex.lock();
-		synth.on(idx);
+		synth.on(midiMessage.pitch, static_cast<float>(midiMessage.velocity)/ 127.0f);
 		synthMutex.unlock();
 	}
 	else{
 		synthMutex.lock();
-		synth.off(idx);
+		synth.off(midiMessage.pitch);
 		synthMutex.unlock();
 	}
 }
