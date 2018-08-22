@@ -71,24 +71,18 @@ void ofApp::setup(){
 		midiThread.startThread();
 	}
 
-	// print input ports to console
-	midiIn.listPorts(); // via instance -> comment this line when done
-	//ofxMidiIn::listPorts(); // via static as well
+	int ports = midiIn.getPortList().size();
+	if (ports > 1){
+		ofLogNotice("Found USB MIDI ports. Trying to use.. ") << midiIn.getPortName(0);
+		// open port by number (you may need to change this)
+		midiIn.openPort(1);
 
-	// open port by number (you may need to change this)
-	midiIn.openPort(1);
-	//midiIn.openPort("IAC Pure Data In");	// by name
-	//midiIn.openVirtualPort("ofxMidiIn Input"); // open a virtual port
+		// add ofApp as a listener
+		midiIn.addListener(this);
 
-	// don't ignore sysex, timing, & active sense messages,
-	// these are ignored by default
-	midiIn.ignoreTypes(false, false, false);
-
-	// add ofApp as a listener
-	midiIn.addListener(this);
-
-	// print received messages to the console
-	midiIn.setVerbose(true);
+		// print received messages to the console
+		midiIn.setVerbose(true);
+	}
 
 	oscIn.setup(getDefault(settings["osc"]["in"]["port"], 8000));
 
@@ -195,12 +189,14 @@ void ofApp::readInputs(){
 	// Issue an SMBus read from address 0.
 	uint8_t buf[1] = {0};
 	if(write(i2c, buf, 1) != 1){
+		ofLogNotice("SMBus Write Address failed");
 		return;
 	}
 
 	// Read the whole inputs message from the MCU.
 	InputsMessage message;
 	if(read(i2c, &message, sizeof(message)) != sizeof(message)){
+		ofLogNotice("SMBus Read failed");
 		return;
 	}
 
@@ -465,9 +461,9 @@ void ofApp::audioOut(ofSoundBuffer& buffer){
 
 void ofApp::newMidiMessage(ofxMidiMessage& msg) {
 	ofxMidiMessage midiMessage = msg;
-	// ofLog(OF_LOG_NOTICE,"channel: " + ofToString(midiMessage.channel) + " control: "
-	// + ofToString(midiMessage.control) +" value: " + ofToString(midiMessage.value)+" pitch: " + ofToString(midiMessage.pitch)
-	// +" velocity: " + ofToString(midiMessage.velocity));
+	ofLog(OF_LOG_NOTICE,"channel: " + ofToString(midiMessage.channel) + " control: "
+	+ ofToString(midiMessage.control) +" value: " + ofToString(midiMessage.value)+" pitch: " + ofToString(midiMessage.pitch)
+	+" velocity: " + ofToString(midiMessage.velocity));
 	if (msg.status == MIDI_NOTE_ON){
 		synthMutex.lock();
 		synth.on(midiMessage.pitch, static_cast<float>(midiMessage.velocity)/ 127.0f);
